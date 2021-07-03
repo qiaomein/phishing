@@ -18,8 +18,10 @@ int main () {
 
     int x0, y0, x1, x2, y1, y2;
 
-    std::cout << "Enter x1, y1, x2, y2:" << std::endl;
-    std::cin >> x1 >> y1 >> x2 >> y2;
+    x1 = 0; y1 = 0;
+
+    std::cout << "Enter x2, y2:" << std::endl;
+    std::cin >> x2 >> y2;
     float m = slope(x1,y1,x2,y2);
     x0 = x1;
     y0 = y1;
@@ -30,6 +32,8 @@ int main () {
     x1 = 0;
     y1 = 0;
     
+    std::cout<<x1<<y1<<x2<<y2<<std::endl;
+
     int q2 =1; int q3=1; int q4 =1;
 
     
@@ -56,7 +60,6 @@ int main () {
         x2 = y2; y2 = x2temp;
         auto x0temp = x0; x0 = y0; y0 = x0temp;
     }
-
 
 
 //bresenham scheme
