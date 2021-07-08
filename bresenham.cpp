@@ -4,6 +4,7 @@
 #include<time.h>
 #include<string>
 #include<fstream>
+#include "bresenham.h"
 
 using std::string;
 
@@ -113,6 +114,7 @@ void bresenham(int x1, int y1, int x2, int y2){
    }
 }
 
+/*
 int main () {
     //file
     
@@ -132,3 +134,4 @@ int main () {
     
     return 0;
 }
+*/
