@@ -78,17 +78,9 @@ std::pair<int, int> randMove(int x, int y) // note: x is positive towards right,
 int main(){
 	
 
-	// myfile << std::to_string(x) + ", " + std::to_string(y) + "\n";
-	int timesteps;
-
-	//std::cout << "enter number of time steps to take:" << std::endl;
-	//std::cin >> timesteps;
-
-	int chaseX = 40, chaseY = -60, randX = 1000, randY = 500;
-
-
-
-
+	int chaseX = 40, chaseY = 20, staticX = 1000, staticY = 500;
+	string filename = "stationary_chasing.csv";
+	bresenham(chaseX,chaseY,staticX,staticY,filename);
 	
 	return 0;
 }

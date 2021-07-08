@@ -1,17 +1,12 @@
-#include<iostream>
-#include<stdlib.h>
-#include<stdio.h>
-#include<time.h>
-#include<string>
-#include<fstream>
+#include "stdSysImports.h"
 #include "bresenham.h"
 
 using std::string;
 
+
 float slope(int x1, int y1, int x2, int y2){
     return float((y2-y1))/(x2-x1);
 }
-
 
 void bresenham1(int x1, int y1, int x2, int y2) // for slopes <= 1
 {
@@ -106,11 +101,12 @@ void bresenham2(int x1, int y1, int x2, int y2) //for reflected slopes of > 1
 
 void bresenham(int x1, int y1, int x2, int y2){
    float m = slope(x1,y1,x2,y2);
+   
    if (abs(m)<= 1) {
-      return bresenham1(x1,y1,x2,y2);
+      bresenham1(x1,y1,x2,y2);
    }
    else{
-      return bresenham2(x1,y1,x2,y2);
+      bresenham2(x1,y1,x2,y2);
    }
 }
 
