@@ -41,6 +41,8 @@ void bresenham1(int x1, int y1, int x2, int y2) // for slopes <= 1
    for (int x = x1, y = y1; x <= x2; x++)
    {
       std::cout << "(" << x - o45*(2*(x-x1)) << "," << y - o8*(2*(y-y1)) << ")\n";
+      myfile << std::to_string(x - o45*(2*(x-x1))) + ", " + std::to_string(y - o8*(2*(y-y1))) + "\n";
+
 
       // Add slope to increment angle formed
       slope_error_new += m_new;
@@ -85,6 +87,7 @@ void bresenham2(int x1, int y1, int x2, int y2) //for reflected slopes of > 1
    for (int x = x1, y = y1; y <= y2; y++)
    {
       std::cout << "(" << x - o36*(2*(x-x1)) << "," << y - o7*(2*(y-y1)) << ")\n";
+      myfile << std::to_string(x - o36*(2*(x-x1))) + ", " + std::to_string(y - o7*(2*(y-y1))) + "\n";
 
       // Add slope to increment angle formed
       slope_error_new += m_new;
