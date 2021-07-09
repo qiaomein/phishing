@@ -1,7 +1,7 @@
 PROG = output
 CFLAGS = -g -Wall
 
-CPP_FILES = stationary_chasing.cpp bresenham.cpp #${wildcard *cpp}
+CPP_FILES = random_chasing.cpp bresenham.cpp #${wildcard *cpp}
 
 all : ${PROG};
 
