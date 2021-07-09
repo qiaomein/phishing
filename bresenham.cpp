@@ -4,15 +4,16 @@
 using std::string;
 
 
+
 float slope(int x1, int y1, int x2, int y2){
     return float((y2-y1))/(x2-x1);
 }
 
-void bresenham1(int x1, int y1, int x2, int y2) // for slopes <= 1
+void bresenham1(int x1, int y1, int x2, int y2, string filename) // for slopes <= 1
 {
     std::ofstream myfile;
 
-    myfile.open("bresenham.csv");
+    myfile.open(filename);
 
     int o45 = 0, o8 = 0;
 
@@ -36,7 +37,7 @@ void bresenham1(int x1, int y1, int x2, int y2) // for slopes <= 1
    int slope_error_new = m_new - (x2 - x1);
    for (int x = x1, y = y1; x <= x2; x++)
    {
-      std::cout << "(" << x - o45*(2*(x-x1)) << "," << y - o8*(2*(y-y1)) << ")\n";
+      //std::cout << "(" << x - o45*(2*(x-x1)) << "," << y - o8*(2*(y-y1)) << ")\n";
       myfile << std::to_string(x - o45*(2*(x-x1))) + ", " + std::to_string(y - o8*(2*(y-y1))) + "\n";
 
 
@@ -54,11 +55,11 @@ void bresenham1(int x1, int y1, int x2, int y2) // for slopes <= 1
    myfile.close();
 }
 
-void bresenham2(int x1, int y1, int x2, int y2) //for reflected slopes of > 1
+void bresenham2(int x1, int y1, int x2, int y2, string filename) //for reflected slopes of > 1
 {
     std::ofstream myfile;
 
-    myfile.open("bresenham.csv");
+    myfile.open(filename);
 
    int o36 = 0, o7 = 0;
 
@@ -82,7 +83,7 @@ void bresenham2(int x1, int y1, int x2, int y2) //for reflected slopes of > 1
    int slope_error_new = m_new - (y2 - y1);
    for (int x = x1, y = y1; y <= y2; y++)
    {
-      std::cout << "(" << x - o36*(2*(x-x1)) << "," << y - o7*(2*(y-y1)) << ")\n";
+      //std::cout << "(" << x - o36*(2*(x-x1)) << "," << y - o7*(2*(y-y1)) << ")\n";
       myfile << std::to_string(x - o36*(2*(x-x1))) + ", " + std::to_string(y - o7*(2*(y-y1))) + "\n";
 
       // Add slope to increment angle formed
@@ -99,14 +100,14 @@ void bresenham2(int x1, int y1, int x2, int y2) //for reflected slopes of > 1
    myfile.close();
 }
 
-void bresenham(int x1, int y1, int x2, int y2){
+void bresenham(int x1, int y1, int x2, int y2, string filename){
    float m = slope(x1,y1,x2,y2);
    
    if (abs(m)<= 1) {
-      bresenham1(x1,y1,x2,y2);
+      bresenham1(x1,y1,x2,y2,filename);
    }
    else{
-      bresenham2(x1,y1,x2,y2);
+      bresenham2(x1,y1,x2,y2,filename);
    }
 }
 
@@ -123,11 +124,6 @@ int main () {
 
     bresenham(x1,y1,x2,y2);
    
-    
-    
-
-
-    
     return 0;
 }
 */
