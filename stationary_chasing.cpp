@@ -6,7 +6,7 @@ using std::string;
 int main(){
 	
 	//initial conditions
-	int chaseX = 100, chaseY = 20, staticX = 1000, staticY = 500;
+	int chaseX = 100, chaseY = 20, staticX = 99, staticY = -300;
 
 
 	string filename = "stationary_chasing.csv";

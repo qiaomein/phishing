@@ -112,9 +112,6 @@ void bresenham(int x1, int y1, int x2, int y2, string filename){
 }
 
 
-
-
-
 std::pair<int,int> bresenham1step(int x1, int y1, int x2, int y2) // for slopes <= 1
 {
 
@@ -207,6 +204,11 @@ std::pair<int,int> bresenham2step(int x1, int y1, int x2, int y2) //for reflecte
 }
 
 std::pair<int,int> bresenhamstep(int x1, int y1, int x2, int y2){
+   if (x1==x2){
+      int dir = (y2-y1)/abs(y2-y1);
+      return {x1,y1+dir};
+   }
+   else{
    float m = slope(x1,y1,x2,y2);
    
    if (abs(m)<= 1) {
@@ -215,21 +217,22 @@ std::pair<int,int> bresenhamstep(int x1, int y1, int x2, int y2){
    else{
       return bresenham2step(x1,y1,x2,y2);
    }
+   }
 }
 
 /*
+
 int main () {
     //file
-    
-
 
     int x0, y0, x1, x2, y1, y2;
 
     std::cout << "Enter x1, y1, x2, y2:" << std::endl;
     std::cin >> x1 >> y1 >> x2 >> y2;
 
-    bresenham(x1,y1,x2,y2);
+    bresenham(x1,y1,x2,y2,"test.csv");
    
     return 0;
 }
+
 */

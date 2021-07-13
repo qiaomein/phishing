@@ -8,6 +8,7 @@
 #include<fstream>
 #include<time.h>
 #include<vector>
+#include<math.h>
 
 
 

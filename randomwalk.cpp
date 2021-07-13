@@ -76,86 +76,51 @@ std::pair<int, int> randMove(int x, int y) // note: x is positive towards right,
 }
 
 
-/*
-int main() {
-
-    //file
-    std::ofstream myfile;
-    myfile.open("randomwalk.csv");
-    
-
-    std::cout << "Enter starting coordinates then elapsed time." << std::endl;
-    float tmax;
-    int x, y;
-    string current_zone;
-    bool isInvis = false;
-    std::cin >> x >> y >> tmax;
-
-    srand(time(NULL));
-    float dt = 1;
-
-    myfile << std::to_string(x) + "," + std::to_string(y) + "\n";
-
-    for (float i = 0; i <= tmax; i = i + dt){
-        int rstate = rand() % 10;
-        current_zone = zone(x,y);
-
-        if (current_zone == "A") {
-            std::cout << x << " " << y << "    " << current_zone << std::endl;
-            break;
-        }
-        if (rstate == 0){
-            isInvis = !isInvis;
-        }
-
-        if (rstate % 3 == 0 && rstate != 0){ // north is 3,6,9
-            y++;
-            if (rstate == 3){
-                x--;
-            }
-            else if (rstate == 9){
-                x++;
-            }
-        }
-        else if (rstate % 3 == 1){ //south is 1,4,7
-            y--;
-            if (rstate == 1){
-                x--;
-            }
-            else if (rstate == 7){
-                x ++;
-            }
-        }
-        else if (rstate == 2){ // dont change y 2,8 (5 is stay)
-            x--;
-        }
-        else if (rstate == 8) {
-            x ++;
-        }
-
-        if (x < 0){
-        x = 0;
-        }
-        if (x > 4096){
-            x = 4096;
-        }
-        if (y < 0){
-            y = 0;
-        }
-        if (y > 4096){
-            y = 4096;
-        }
-
-        myfile << std::to_string(x) + "," + std::to_string(y) + "\n";
-        
-        // std::cout << x << " " << y << "    " << current_zone << std::endl;
-
-        // std::cout << x << " " << y << "    " << rstate << std::endl;
+float findEntropy (int timesteps, std::pair<int,int> boatpositions[]) {
+	int dx,dy;
+	int p[9]; //0-8 each index represents a move (not accounting for invis yet)
+    for (int i = 0; i <= timesteps; i ++){
+		dx = boatpositions[i].first - boatpositions[i-1].first;
+		dy = boatpositions[i].second - boatpositions[i-1].second;
+		if (dx == 1){
+			if (dy == 1){
+				p[2] ++;
+			}
+			else if (dy == -1){
+				p[4]++;
+			}
+			else{
+				p[3]++;
+			}
+		}
+		else if (dx == -1){
+			if (dy == 1){
+				p[8] ++;
+			}
+			else if (dy == -1){
+				p[6]++;
+			}
+			else{
+				p[7]++;
+			}
+		}
+		else{
+			if (dy == 1){
+				p[1] ++;
+			}
+			else if (dy == -1){
+				p[5]++;
+			}
+			else{
+				p[0]++;
+			}
+		}
     }
-    std::cout << x << " " << y << "    " << current_zone << std::endl;
-    
+	float H = 0; float P;
+	for (int j = 0; j <= 8; j++){
+		P = p[j]/float(9);
+		H += P*log2(P);
+	}
+	return H;
 
-    myfile.close();
-    return 0;
 }
-*/
