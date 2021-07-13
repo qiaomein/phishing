@@ -78,13 +78,14 @@ std::pair<int, int> randMove(int x, int y) // note: x is positive towards right,
 
 float findEntropy (int timesteps, std::pair<int,int> boatpositions[]) {
 	int dx,dy;
-	int p[9]; //0-8 each index represents a move (not accounting for invis yet)
-    for (int i = 0; i <= timesteps; i ++){
+	int p[9] = {}; //0-8 each index represents a move (not accounting for invis yet)
+    for (int i = 1; i <= timesteps; i ++){
 		dx = boatpositions[i].first - boatpositions[i-1].first;
 		dy = boatpositions[i].second - boatpositions[i-1].second;
+		
 		if (dx == 1){
 			if (dy == 1){
-				p[2] ++;
+				p[2] = p[2] + 1;
 			}
 			else if (dy == -1){
 				p[4]++;
@@ -104,7 +105,7 @@ float findEntropy (int timesteps, std::pair<int,int> boatpositions[]) {
 				p[7]++;
 			}
 		}
-		else{
+		else if (dx == 0){
 			if (dy == 1){
 				p[1] ++;
 			}
@@ -115,11 +116,17 @@ float findEntropy (int timesteps, std::pair<int,int> boatpositions[]) {
 				p[0]++;
 			}
 		}
+		
+		std::cout << dx << ',' << dy<< std::endl;
     }
+	for (int i = 0; i <= 8;i++){
+	std::cout<< "p array:" << p[i] <<std::endl;
+	}
 	float H = 0; float P;
 	for (int j = 0; j <= 8; j++){
-		P = p[j]/float(9);
-		H += P*log2(P);
+		P = p[j]/float(timesteps);
+		std::cout<< "probability: " << P << std::endl;
+		H += P*log2(1/P);
 	}
 	return H;
 
