@@ -4,7 +4,7 @@
 using std::string;
 
 int main() {
-    int timesteps = 1000;
+    int timesteps = 10000;
 
     std::pair <int,int> startboatpos = { 4096/2, 4096/2};
     std::pair<int,int> boatpositions[timesteps] = {};
@@ -13,8 +13,7 @@ int main() {
     for (int i = 1; i<= timesteps; i++){
         int currX = boatpositions[i-1].first;
         int currY = boatpositions[i-1].second;
-        //boatpositions[i] = randMove(currX, currY);
-        boatpositions[i] = bresenhamstep(currX, currY,4096,4096);
+        boatpositions[i] = randMove(currX, currY);
     }
 
     /*
