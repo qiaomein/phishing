@@ -117,7 +117,7 @@ float findEntropy (int timesteps, std::pair<int,int> boatpositions[]) {
 			}
 		}
 		
-		std::cout << dx << ',' << dy<< std::endl;
+		//std::cout << dx << ',' << dy<< std::endl;
     }
 	for (int i = 0; i <= 8;i++){
 	std::cout<< "p array:" << p[i] <<std::endl;
@@ -125,6 +125,9 @@ float findEntropy (int timesteps, std::pair<int,int> boatpositions[]) {
 	float H = 0; float P;
 	for (int j = 0; j <= 8; j++){
 		P = p[j]/float(timesteps);
+		if (P == 0){
+			continue;
+		}
 		std::cout<< "probability: " << P << std::endl;
 		H += P*log2(1/P);
 	}
