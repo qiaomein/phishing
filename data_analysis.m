@@ -23,7 +23,7 @@ hold on;
 plot(chaseX(end),chaseY(end),'ro');
 plot(chaseX(1),chaseY(1),'ro');
 %%
-%close all;
+close all;
 data = csvread('dynamic_chasing.csv');
 chaseX = data(:,1); chaseY = data(:,2);
 randomX = data(:,4); randomY = data(:,5);
@@ -39,15 +39,13 @@ plot(chaseX(1),chaseY(1),'ro');
 plot(randomX(end),randomY(end),'kx');
 plot(randomX(1),randomY(1),'ko');
 %%
-data = csvread('test.csv');
+data = csvread('out.csv');
 chaseX = data(:,1); chaseY = data(:,2);
-%randomX = data(:,4); randomY = data(:,5);
 
 figure;
 
 plot(chaseX,chaseY,'.'); hold on; 
 %plot(randomX,randomY,'.');
-legend('runner','chaser');
 hold on;
 plot(chaseX(end),chaseY(end),'rx');
 plot(chaseX(1),chaseY(1),'ro');
