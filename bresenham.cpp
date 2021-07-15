@@ -185,9 +185,11 @@ std::pair<int,int> bresenham2step(int x1, int y1, int x2, int y2) //for reflecte
    int slope_error_new = m_new - (y2 - y1);
    for (int x = x1, y = y1, i = 0; y <= y2 && i < 2; y++, i ++)
    {
+
+      temp = {x - o36*(2*(x-x1)), y - o7*(2*(y-y1))};
       //std::cout << "(" << x - o36*(2*(x-x1)) << "," << y - o7*(2*(y-y1)) << ")\n";
       //myfile << std::to_string(x - o36*(2*(x-x1))) + ", " + std::to_string(y - o7*(2*(y-y1))) + "\n";
-      temp = {x - o36*(2*(x-x1)), y - o7*(2*(y-y1))};
+      
       // Add slope to increment angle formed
       slope_error_new += m_new;
  
