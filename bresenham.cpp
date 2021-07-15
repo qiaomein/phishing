@@ -141,7 +141,7 @@ std::pair<int,int> bresenham1step(int x1, int y1, int x2, int y2) // for slopes 
    {
       //std::cout << "(" << x - o45*(2*(x-x1)) << "," << y - o8*(2*(y-y1)) << ")\n";
       //myfile << std::to_string(x - o45*(2*(x-x1))) + ", " + std::to_string(y - o8*(2*(y-y1))) + "\n";
-
+      temp = {x - o45*(2*(x-x1)),y - o8*(2*(y-y1))};
 
       // Add slope to increment angle formed
       slope_error_new += m_new;
@@ -153,7 +153,7 @@ std::pair<int,int> bresenham1step(int x1, int y1, int x2, int y2) // for slopes 
          y++;
          slope_error_new  -= 2 * (x2 - x1);
       }
-      temp = {x - o45*(2*(x-x1)),y - o8*(2*(y-y1))};
+      
    }
    return temp;
 }
@@ -187,7 +187,7 @@ std::pair<int,int> bresenham2step(int x1, int y1, int x2, int y2) //for reflecte
    {
       //std::cout << "(" << x - o36*(2*(x-x1)) << "," << y - o7*(2*(y-y1)) << ")\n";
       //myfile << std::to_string(x - o36*(2*(x-x1))) + ", " + std::to_string(y - o7*(2*(y-y1))) + "\n";
-
+      temp = {x - o36*(2*(x-x1)), y - o7*(2*(y-y1))};
       // Add slope to increment angle formed
       slope_error_new += m_new;
  
@@ -198,7 +198,7 @@ std::pair<int,int> bresenham2step(int x1, int y1, int x2, int y2) //for reflecte
          x++;
          slope_error_new  -= 2 * (y2 - y1);
       }
-      temp = {x - o36*(2*(x-x1)), y - o7*(2*(y-y1))};
+      
    }
    return temp;
 }
