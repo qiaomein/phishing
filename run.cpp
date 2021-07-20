@@ -9,12 +9,12 @@ int main () {
     myfile.open("positions.csv");
     entropyfile.open("entropies.csv");
 
-    int n = 50; //number of trajectories
+    int n = 200; //number of trajectories
     
     
 
-    int timesteps = 500;
-    int buffersize = 64;
+    int timesteps = 2000;
+    int buffersize = 128;
 
     
 
@@ -41,13 +41,13 @@ int main () {
             int currY = boatPositions[i-1].second;
             boatPositions[i] = randMove(currX, currY);
             
-            if (currXc != runner.first && currYc != runner.second){ //checking for collision
+            if (currXc != runner.first && currYc != runner.second && currXc != -1){ //checking for collision
                 chasingBoatPositions[i] = bresenhamstep(currXc,currYc,runner.first,runner.second);
             }
             else{
                 chasingBoatPositions[i] = {-1,-1};
             }
-            if (currXf != runner.first && currYf != runner.second){
+            if (currXf != runner.first && currYf != runner.second && currXf != -1){
                 followingBoatPositions[i] = randFollowMove(currXf,currYf,runner.first,runner.second);
             }
             else{
@@ -57,19 +57,19 @@ int main () {
 
             myfile << currX << "," << currY << ",," << currXc << "," << currYc 
             << ",," << currXf << "," << currYf << ",," <<runner.first << "," << runner.second << "\n";
+                if (dir == 1){
+                    runner.first++;
+                }
+                else if (dir == 2) {
+                    runner.first --;
+                }
+                else if (dir == 3) {
+                    runner.second ++;
+                }
+                else{
+                    runner.second--;
+                }
             
-            if (dir == 1){
-                runner.first++;
-            }
-            else if (dir == 2) {
-                runner.first --;
-            }
-            else if (dir == 3) {
-                runner.second ++;
-            }
-            else{
-                runner.second--;
-            }
 
         }
     entropyfile << findEntropyBuffer(buffersize,timesteps,boatPositions) << ", "
