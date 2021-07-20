@@ -25,10 +25,13 @@ int main (){
 		}
 
 		myfile << std::to_string(u.first) + ", " + std::to_string(u.second) + ", ," << std::to_string(v.first) + ", " + std::to_string(v.second) + "\n";
-		if (t % 16 >11){
+		u = randMove(u.first,u.second);
+		if (t % 16 >11){	
 			
+			/*
 			u.first++;
 			u.second = u.second + 2;
+			*/
 		}
 	}
 

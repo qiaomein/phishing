@@ -23,6 +23,10 @@ string zone (int x, int y);
 float findEntropy(int timesteps, std::pair<int,int> boatpositions[]);
 // returns the entropy from array of boat positions
 
+float findEntropyBuffer(int buffersize, int timesteps, std::pair<int,int> boatpositions[]);
+// returns the entropy from array of boat positions
+
+
 std::pair<int, int> randFollowMove(int curX, int curY, int goalX, int goalY);
 // return next randfollowmove given two points
 

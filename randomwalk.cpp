@@ -1,4 +1,5 @@
 #include "stdSysImports.h"
+using namespace std;
 using std::string;
 
 string zone(int x, int y) {
@@ -79,6 +80,8 @@ std::pair<int, int> randMove(int x, int y) // note: x is positive towards right,
 float findEntropy (int timesteps, std::pair<int,int> boatpositions[]) {
 	int dx,dy;
 	int p[9] = {}; //0-8 each index represents a move (not accounting for invis yet)
+
+	//loop through the position array to create probability array
     for (int i = 1; i <= timesteps; i ++){
 		dx = boatpositions[i].first - boatpositions[i-1].first;
 		dy = boatpositions[i].second - boatpositions[i-1].second;
@@ -120,7 +123,7 @@ float findEntropy (int timesteps, std::pair<int,int> boatpositions[]) {
 		//std::cout << dx << ',' << dy<< std::endl;
     }
 	for (int i = 0; i <= 8;i++){
-	std::cout<< "p array:" << p[i] <<std::endl;
+	//std::cout<< "p array:" << p[i] <<std::endl;
 	}
 	float H = 0; float P;
 	for (int j = 0; j <= 8; j++){
@@ -128,9 +131,31 @@ float findEntropy (int timesteps, std::pair<int,int> boatpositions[]) {
 		if (P == 0){
 			continue;
 		}
-		std::cout<< "probability: " << P << std::endl;
+		//std::cout<< "probability: " << P << std::endl;
 		H += P*log2(1/P);
 	}
 	return H;
+
+}
+
+float findEntropyBuffer (int buffersize, int timesteps, std::pair<int,int> boatpositions[]) {
+	float H; float sum = 0;
+	pair<int,int> slicedPos[buffersize];
+
+	for (int t = 0; t+buffersize <= timesteps; t++){ //iterate over timesteps in boatpositions
+
+		for (int i = 0; i <= buffersize; i++){//iterate of history buffer
+			if (boatpositions[t+i].first == -1){
+				return sum/(timesteps-buffersize);
+			}
+			slicedPos[i] = boatpositions[t+i];
+			
+		}
+
+		H = findEntropy(buffersize,slicedPos);
+		//cout << H << " " << t << endl;
+		sum += H;
+	}
+	return sum/(timesteps-buffersize);
 
 }
