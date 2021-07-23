@@ -13,11 +13,16 @@ manual(3) = mean(data(:,3));
 entropies = reshape(data,numel(data),1);
 [idx, C] = kmeans(entropies,3);
 
-manual = sort(manual)
-C = sort(C)
+manual = sort(manual);
+C = sort(C);
+
 writematrix([manual C],'thresholds.csv');
 figure;
-plot(entropies,0,'.'); %hold on; plot([0 3.5],[0 0]);
+plot(data(:,1),0,'r.'); %hold on; plot([0 3.5],[0 0]);
+hold on;
+plot(data(:,2),0,'b.');
+plot(data(:,3),0,'g.');
+plot(C,0,'k.','MarkerSize',25);
+plot(manual,0,'m.','MarkerSize',15);
 
-
-hold on; plot(C,0,'.','MarkerSize',30);
+title('K-means clustering centroids and data points');

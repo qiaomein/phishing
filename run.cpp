@@ -9,11 +9,11 @@ int main () {
     myfile.open("positions.csv");
     entropyfile.open("entropies.csv");
 
-    int n = 200; //number of trajectories
+    int n = 1000; //number of trajectories
     
     
 
-    int timesteps = 2000;
+    int timesteps = 5000;
     int buffersize = 128;
 
     
@@ -57,6 +57,7 @@ int main () {
 
             myfile << currX << "," << currY << ",," << currXc << "," << currYc 
             << ",," << currXf << "," << currYf << ",," <<runner.first << "," << runner.second << "\n";
+            if (i % 2 == 1){
                 if (dir == 1){
                     runner.first++;
                 }
@@ -69,7 +70,7 @@ int main () {
                 else{
                     runner.second--;
                 }
-            
+            }
 
         }
     entropyfile << findEntropyBuffer(buffersize,timesteps,boatPositions) << ", "

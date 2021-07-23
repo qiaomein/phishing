@@ -139,15 +139,13 @@ float findEntropy (int timesteps, std::pair<int,int> boatpositions[]) {
 }
 
 float findEntropyBuffer (int buffersize, int timesteps, std::pair<int,int> boatpositions[]) {
-	float H; float sum = 0;
+	float H; float sum = 0; int counter = 0;
 	pair<int,int> slicedPos[buffersize];
 
 	for (int t = 0; t+buffersize <= timesteps; t++){ //iterate over timesteps in boatpositions
-
+	
 		for (int i = 0; i <= buffersize; i++){//iterate of history buffer
-			if (boatpositions[t+i].first == -1){
-				return sum/(timesteps-buffersize);
-			}
+			
 			slicedPos[i] = boatpositions[t+i];
 			
 		}
@@ -155,7 +153,12 @@ float findEntropyBuffer (int buffersize, int timesteps, std::pair<int,int> boatp
 		H = findEntropy(buffersize,slicedPos);
 		//cout << H << " " << t << endl;
 		sum += H;
+		counter ++;
+
+		if (slicedPos[buffersize-1].first == -1){
+			break;
+		}
 	}
-	return sum/(timesteps-buffersize);
+	return sum/counter;
 
 }
