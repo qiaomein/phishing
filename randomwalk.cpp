@@ -1,4 +1,6 @@
 #include "stdSysImports.h"
+
+
 using namespace std;
 using std::string;
 
@@ -142,9 +144,9 @@ float findEntropyBuffer (int buffersize, int timesteps, std::pair<int,int> boatp
 	float H; float sum = 0; int counter = 0;
 	pair<int,int> slicedPos[buffersize];
 
-	for (int t = 0; t+buffersize <= timesteps; t++){ //iterate over timesteps in boatpositions
+	for (int t = 0; t+buffersize < timesteps; t++){ //iterate over timesteps in boatpositions
 	
-		for (int i = 0; i <= buffersize; i++){//iterate of history buffer
+		for (int i = 0; i < buffersize; i++){//iterate of history buffer
 			
 			slicedPos[i] = boatpositions[t+i];
 			
