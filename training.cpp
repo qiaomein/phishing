@@ -9,7 +9,7 @@ int main () {
     myfile.open("positions.csv");
     entropyfile.open("entropies.csv");
 
-    int n = 1000; //number of trajectories
+    int n = 100; //number of trajectories
     
     
 
@@ -29,7 +29,7 @@ int main () {
         followingBoatPositions[0] = chaser;
         int dir = rand() % 4 + 1; 
         pair<int,int> runner = {(rand() % 2)*(chaser.first+512) + rand() % (chaser.first-512) + 1,(rand() % 2)*(chaser.second+512) +rand() % (chaser.second-512) + 1}; //randomize runner pos
-        myfile << "Trajectory #" << k <<"\n";
+        myfile << k << "\n";
 
         for (int i = 1; i<= timesteps; i++){ //looping through each step
         
@@ -55,8 +55,8 @@ int main () {
             }
 
 
-            myfile << currX << "," << currY << ",," << currXc << "," << currYc 
-            << ",," << currXf << "," << currYf << ",," <<runner.first << "," << runner.second << "\n";
+            myfile << currX << "," << currY << "," << currXc << "," << currYc 
+            << "," << currXf << "," << currYf << "," <<runner.first << "," << runner.second << "\n";
             if (i % 2 == 1){
                 if (dir == 1){
                     runner.first++;
