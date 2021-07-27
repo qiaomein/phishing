@@ -36,13 +36,17 @@ with open(filename, newline ='') as csvfile:
 plt.figure(figsize=(18,9))
 
 plt.subplot(121)
-plt.plot(followingwalk,[0]*len(followingwalk),'ro',markersize = 2)
+plt.title('Entropy Clusters')
+
+
 
 plt.plot(randomwalk,[0]*len(followingwalk),'bo',markersize = 2)
 
 plt.plot(chasingwalk,[0]*len(followingwalk),'go',markersize = 2)
-#plt.xlim(0,4)
+plt.plot(followingwalk,[0]*len(followingwalk),'ro',markersize = 2)
 
+#plt.xlim(0,4)
+plt.legend(['random','chasing','following'])
 data = [randomwalk,chasingwalk,followingwalk]
 means = [mean(l) for l in data]
 stdevs = [stdev(l) for l in data]
@@ -53,23 +57,24 @@ plt.plot(means,[0]*3,'yo',markersize=5)
 
 
 ## writing to csv file
-thresholds = [0,means[2]-4*stdevs[2],means[2]+stdevs[2]*(means[0]-means[2])/(stdevs[0]+stdevs[2])]
+thresholds = [0,means[1]+stdevs[1]*(means[2]-means[1])/(stdevs[2]+stdevs[1]),means[2]+stdevs[2]*(means[0]-means[2])/(stdevs[0]+stdevs[2])]
 with open('thresholds.csv','w') as csvfile:
     csvwriter = csv.writer(csvfile)
 
     csvwriter.writerow(thresholds)
 
-
-
-
 for x in thresholds:
     plt.axvline(x)
 
 plt.subplot(122)
+plt.title('Distributions')
 
-plt.hist(chasingwalk,bins = 50)
+
 plt.hist(randomwalk,bins = 50)
+plt.hist(chasingwalk,bins = 50)
 plt.hist(followingwalk,bins = 50)
+
+plt.legend(['random','chasing','following'])
 
 
 
