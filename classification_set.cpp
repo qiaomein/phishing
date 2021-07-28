@@ -8,11 +8,11 @@ int main () {
     ofstream myfile;
     myfile.open("trajectories.csv");
 
-    int n = 1000; //number of trajectories
+    int n = 200; //number of trajectories
     
     
 
-    int timesteps = 5000;    
+    int timesteps = 2000;    
 
     for (int k = 0; k< n; k++){ //looping through each trajectory
         pair<int,int> chaser = {2048,2048}; //chaser starts in the middle
