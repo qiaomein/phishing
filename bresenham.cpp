@@ -111,7 +111,6 @@ void bresenham(int x1, int y1, int x2, int y2, string filename){
    }
 }
 
-
 std::pair<int,int> bresenham1step(int x1, int y1, int x2, int y2) // for slopes <= 1
 {
 
@@ -133,14 +132,12 @@ std::pair<int,int> bresenham1step(int x1, int y1, int x2, int y2) // for slopes 
        o8 = 1;
     }
 
-   std::pair<int,int> temp = {x1,y1};
+   std::pair<int,int> temp;
 
    int m_new = 2 * (y2 - y1);
    int slope_error_new = m_new - (x2 - x1);
    for (int x = x1, y = y1, i = 0; x <= x2 && i < 2; x++, i++)
    {
-      //std::cout << "(" << x - o45*(2*(x-x1)) << "," << y - o8*(2*(y-y1)) << ")\n";
-      //myfile << std::to_string(x - o45*(2*(x-x1))) + ", " + std::to_string(y - o8*(2*(y-y1))) + "\n";
       temp = {x - o45*(2*(x-x1)),y - o8*(2*(y-y1))};
 
       // Add slope to increment angle formed
@@ -179,7 +176,7 @@ std::pair<int,int> bresenham2step(int x1, int y1, int x2, int y2) //for reflecte
        o7 = 1;
     }
 
-   std::pair<int,int> temp = {x1,y1};
+   std::pair<int,int> temp;
 
    int m_new = 2 * (x2 - x1);
    int slope_error_new = m_new - (y2 - y1);
@@ -210,6 +207,10 @@ std::pair<int,int> bresenhamstep(int x1, int y1, int x2, int y2){
       int dir = (y2-y1)/abs(y2-y1);
       return {x1,y1+dir};
    }
+   else if (y1 == y2){
+      int dir = (x2-x1)/abs(x2-x1);
+      return {x1 + dir, y1};
+   }
    else{
    float m = slope(x1,y1,x2,y2);
    
@@ -222,19 +223,35 @@ std::pair<int,int> bresenhamstep(int x1, int y1, int x2, int y2){
    }
 }
 
+
+
 /*
 
 int main () {
     //file
+    std::ofstream myfile;
+    myfile.open("bresenhamstep.csv");
 
     int x0, y0, x1, x2, y1, y2;
+    std::pair<int,int> boat = {2000,2500};
 
-    std::cout << "Enter x1, y1, x2, y2:" << std::endl;
-    std::cin >> x1 >> y1 >> x2 >> y2;
-
-    bresenham(x1,y1,x2,y2,"test.csv");
+    //std::cout << "Enter x2, y2:" << std::endl;
+    //std::cin >> x2 >> y2;
+    x2 = 2048; y2 = 2048;
+    bresenham(boat.first,boat.second,x2,y2,"bresenham.csv");
    
-    return 0;
+   for (int i = 0;i<2000;i++){
+      myfile << boat.first<< ',' << boat.second <<'\n';
+
+      boat = bresenhamstep(boat.first,boat.second,x2,y2);
+      
+      
+   }
+   myfile.close();
+   
+   return 0;
 }
 
 */
+
+
