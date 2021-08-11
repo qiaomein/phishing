@@ -9,7 +9,7 @@ nFrames = 300;    %Number of frames
 duration = 15; %Video duration [Seconds]
 
 vidObj = VideoWriter(vidStr,'MPEG-4');  %Create video object, .mp4
-vidObj.FrameRate = 60;   %Set frame rate
+vidObj.FrameRate = 20;   %Set frame rate
   % Set video quality to max
    %Open video object for editing
 open(vidObj);
@@ -29,7 +29,7 @@ for j = 1:nFrames
     end
     hold on; axis equal;
     plot(randX(j),randY(j),'b.');plot(data(j,7),data(j,8),'k.');
-    
+    plot(data(j,9),data(j,10),'m.');
 
     drawnow % Force plot to update before code advances
     writeVideo(vidObj,getframe(gcf));
