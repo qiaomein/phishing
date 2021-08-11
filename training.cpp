@@ -128,13 +128,13 @@ int main () {
 
                     if (m>segmentLength){ // if we are done with a zig prepare for zag
                         m = -1;
-                        randMoveType = rand() % 3 + 1;
+                        randMoveType ++;
                         }                  
                     
-                    if (randMoveType == 1){
+                    if (randMoveType % 2 == 0){
                         curMove = move1;
                     }
-                    else if (randMoveType == 2){
+                    else if (randMoveType % 2 == 1){
                         curMove = move2;
                     }
                     else {
