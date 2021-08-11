@@ -6,7 +6,7 @@ using namespace std;
 
 bool invis = false;
 
-pair<int, int> randFollowMove(int curX, int curY, int goalX, int goalY)
+pair<int, int> randFollowMove(int curX, int curY, int goalX, int goalY) //based on probability matrix
 {
 	// 30% chance do bresenham
 	// 5% for each of invis or 3 directions away
@@ -89,6 +89,7 @@ pair<int, int> randFollowMove(int curX, int curY, int goalX, int goalY)
 
 	return randMove;
 }
+
 
 /*
 int main(void)
