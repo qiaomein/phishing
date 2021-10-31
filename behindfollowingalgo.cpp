@@ -141,6 +141,75 @@ std::pair<int, int> bresenham2step(int x1, int y1, int x2, int y2) //for reflect
 	return temp;
 }
 
+double findEntropy(int timesteps, vector<pair<int, int>> boatpositions) {
+	int dx, dy;
+	int p[9] = {}; //0-8 each index represents a move (not accounting for invis yet)
+
+	//loop through the position array to create probability array
+	for (int i = 1; i < timesteps; i++) 
+	{
+		dx = boatpositions[i].first - boatpositions[i - 1].first;
+		dy = boatpositions[i].second - boatpositions[i - 1].second;
+
+		if (dx == 1) 
+		{
+			if (dy == 1) 
+			{
+				p[2] = p[2] + 1;
+			}
+			else if (dy == -1) 
+			{
+				p[4]++;
+			}
+			else 
+			{
+				p[3]++;
+			}
+		}
+		else if (dx == -1) 
+		{
+			if (dy == 1) 
+				p[8] ++;
+
+			else if (dy == -1) 
+				p[6]++;
+
+			else 
+				p[7]++;
+		}
+		else if (dx == 0) 
+		{
+			if (dy == 1) 
+			{
+				p[1] ++;
+			}
+			else if (dy == -1) 
+			{
+				p[5]++;
+			}
+			else 
+			{
+				p[0]++;
+			}
+		}
+
+		//std::cout << dx << ',' << dy<< std::endl;
+	}
+
+	double H = 0; double P;
+	for (int j = 0; j <= 8; j++) 
+	{
+		P = p[j] / double(timesteps);
+		if (P == 0) 
+			continue;
+		
+		//std::cout<< "probability: " << P << std::endl;
+		H += P * log2(1 / P);
+	}
+	return H;
+
+}
+
 std::pair<int, int> bresenhamstep(int x1, int y1, int x2, int y2) {
 	if (x1 == x2) {
 		int dir = (y2 - y1) / abs(y2 - y1);
@@ -396,7 +465,7 @@ bool inZone(char zone, int curX, int curY, int curVictimX, int curVictimY)
 
 int main(void)
 {
-	freopen("out.csv", "w", stdout); // opens file to write to
+	freopen("lucy.csv", "w", stdout); // opens file to write to
 	// allows us to use std output to write to the file
 	int curX = 2047, curY = 1790;
 	int curVictimX = 2047, curVictimY = 2047;
@@ -463,5 +532,7 @@ int main(void)
 		if (inZone('A', curX, curY, curVictimX, curVictimY))
 			break;
 	}
+
+
 	return 0;
 }
