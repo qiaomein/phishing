@@ -57,7 +57,7 @@ with open('thresholds.csv') as csvfile:
 print(f'Thresholds: {thresholds}')
 
 buffersize = 128
-prop = .3
+prop = .2
 
 with open(filename) as csvfile:
     csvread = csv.reader(csvfile)
