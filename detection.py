@@ -49,15 +49,17 @@ def findEntropyBuffer(buffersize,traj,prop = 1):
 
 filename = 'trajectories.csv'
 
+
+
 thresholds = []
-with open('thresholds.csv') as csvfile:
+with open('thresholds.csv') as csvfile: # change threshold file depending on what thresholds we are using
     csvread = csv.reader(csvfile)
     for line in csvread:
         thresholds.extend([float(x) for x in line])
 print(f'Thresholds: {thresholds}')
 
 buffersize = 128
-prop = .2
+prop = .1
 
 with open(filename) as csvfile:
     csvread = csv.reader(csvfile)
@@ -100,7 +102,7 @@ with open(filename) as csvfile:
     with open(f'detection{prop}.csv','w',newline='') as csvfile:
         csvwrite = csv.writer(csvfile)
         csvwrite.writerows([c,f,r])
-        csvwrite.writerow(['Errors:'])
+        csvwrite.writerow(['ERROR LOG:'])
         csvwrite.writerows(error)
 
 
