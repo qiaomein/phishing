@@ -8,10 +8,13 @@ PY_FILES = plotting.py
 #CPP_FILES = classification_set.cpp randomwalk.cpp bresenham.cpp 
 
 #use this line for training
-CPP_FILES = training.cpp randomwalk.cpp bresenham.cpp following.cpp #${wildcard *cpp}
+#CPP_FILES = training.cpp randomwalk.cpp bresenham.cpp following.cpp #${wildcard *cpp}
 
-#use this line ONCE done training
-#CPP_FILES = classification_set.cpp randomwalk.cpp bresenham.cpp 
+#use this line ONCE done training (creates a new set to run detection/classification on)
+CPP_FILES = classification_set.cpp randomwalk.cpp bresenham.cpp following.cpp
+
+# for generating RW-chasing csv
+#CPP_FILES = RW-Chasing.cpp randomwalk.cpp bresenham.cpp following.cpp
 
 all : ${PROG};
 
