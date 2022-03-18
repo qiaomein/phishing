@@ -9,12 +9,12 @@ int main () {
     myfile.open("positions.csv");
     entropyfile.open("entropies.csv");
 
-    int n = 200; //number of trajectories
+    int n = 500; //number of trajectories
     
     
 
     int timesteps = 2000;
-    int buffersize = 128;
+    int buffersize = 128; // used in entropybuffer calcs
 
     
 
@@ -152,7 +152,7 @@ int main () {
             }
 
             myfile << currX << "," << currY << "," << currXc << "," << currYc 
-            << "," << currXf << "," << currYf << "," <<runner.first << "," << runner.second << "," << currX3f << "," << currY3f <<  "\n";
+            << "," << currXf << "," << currYf << "," << runner.first << "," << runner.second << "," << currX3f << "," << currY3f <<  "\n";
             if (i % 2 == 1){
                 if (dir == 1){
                     runner.first++;

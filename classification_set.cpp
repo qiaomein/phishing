@@ -10,7 +10,6 @@ int main () {
 
     int n = 200; //number of trajectories
     
-    
 
     int timesteps = 2000;    
 

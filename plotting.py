@@ -72,6 +72,11 @@ with open('thresholds.csv','w') as csvfile:
 
     csvwriter.writerow(thresholds)
 
+with open('thresholds_voronoi.csv','w') as csvfile:
+    csvwriter = csv.writer(csvfile)
+
+    csvwriter.writerow(voronoi_thresholds)
+
 for i in range(len(thresholds)):
     plt.axvline(thresholds[i])
     plt.axvline(voronoi_thresholds[i],color = 'red')
