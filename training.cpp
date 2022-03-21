@@ -3,6 +3,8 @@
 
 using namespace std;
 
+
+
 pair<int, int> randFollowMove(int curX, int curY, int goalX, int goalY) //based on probability matrix
 {
     bool invis = false;
@@ -23,7 +25,7 @@ pair<int, int> randFollowMove(int curX, int curY, int goalX, int goalY) //based 
 	for (int i = -1; i <= 1; i++)
 		for (int j = -1; j <= 1; j++)
 		{
-			int totalDiff = abs(chaseMove.first - i) + abs(chaseMove.second - j);
+			int totalDiff = std::abs(chaseMove.first - i) + std::abs(chaseMove.second - j);
 			if (totalDiff == 3) // if chase was north, this would be SW/SE
 			{
 				randomizedList.push_back({ i,j });
@@ -92,10 +94,12 @@ pair<int, int> randFollowMove(int curX, int curY, int goalX, int goalY) //based 
 int main () {
 
     ofstream myfile; ofstream entropyfile;
+
+
     myfile.open("positions.csv");
     entropyfile.open("entropies.csv");
 
-    int n = 500; //number of trajectories
+    int n = 50; //number of trajectories
     
     
 
@@ -115,7 +119,7 @@ int main () {
         chasingBoatPositions[0] = chaser;
         followingBoatPositions[0] = chaser;
         threeFollowBoatPositions[0] = chaser;
-        int dir = rand() % 4 + 1; 
+        int dir = 1; //rand() % 4 + 1; 
         pair<int,int> runner = {(rand() % 2)*(chaser.first+512) + rand() % (chaser.first-512) + 1,(rand() % 2)*(chaser.second+512) +rand() % (chaser.second-512) + 1}; //randomize runner pos
         myfile << k << "\n";
 
@@ -125,6 +129,10 @@ int main () {
         int randMoveType = rand() % 3 + 1;
         int m = 0;
         int zzl = 15 + rand() % 10;
+        
+        //getFollowing(chaser.first,chaser.second,timesteps);
+
+
 
         for (int i = 1; i<= timesteps; i++){ //looping through each time step
 
@@ -185,7 +193,7 @@ int main () {
             else{
                 chasingBoatPositions[i] = {-1,-1};
             }
-
+//follow move
             if ((currXf != runner.first || currYf != runner.second) && currXf != -1){
                 followingBoatPositions[i] = randFollowMove(currXf,currYf,runner.first,runner.second);
             }
@@ -238,7 +246,7 @@ int main () {
             }
 
             myfile << currX << "," << currY << "," << currXc << "," << currYc 
-            << "," << currXf << "," << currYf << "," << runner.first << "," << runner.second << "," << currX3f << "," << currY3f <<  "\n";
+            << "," << currXf << "," << currYf << "," << runner.first << "," << runner.second << "\n"; //<< "," << currX3f << "," << currY3f <<  "\n";
             if (i % 2 == 1){
                 if (dir == 1){
                     runner.first++;
@@ -255,9 +263,22 @@ int main () {
             }
 
         }
+
+        // add following to positions
+        string line;
+        ifstream followingfile ("following_trajectories.csv");
+        if (followingfile.is_open()){
+            while (followingfile.good()){
+                getline(followingfile,line);
+                //cout << line << endl;
+            }
+            followingfile.close();
+        }
+
+
     entropyfile << findEntropyBuffer(buffersize,timesteps,boatPositions) << ", "
     << findEntropyBuffer(buffersize,timesteps,chasingBoatPositions) << ", "
-    << findEntropyBuffer(buffersize,timesteps,followingBoatPositions) << "\n";
+    << findEntropyBuffer(buffersize,timesteps,threeFollowBoatPositions) << "\n";
 
     }
 

@@ -25,20 +25,23 @@
 #include <stdlib.h>
 #include <chrono>
 #include <thread>
+#include "bresenham.h"
 
 using namespace std;
 #define LL long long
-int victimMoving = 0;
-int curVictimX = 2047, curVictimY = 2047;
-int lastVictimX = 2046, lastVictimY = 2047; // change as needed
+
+
+int victim_speed = 10; // the higher the slower
+
+
+/*
+int curVictimX = 1000,curVictimY = 1000;
+int lastVictimX = curVictimX-1, lastVictimY = curVictimY; // change as needed
+*/
 
 bool invis = false;
 
-pair<int, int> victimMover(int goalX, int goalY)
-{
-	return make_pair(goalX + 1, goalY); // or something else
-}
-
+////
 float slope(int x1, int y1, int x2, int y2)
 {
 	return float((y2 - y1)) / (x2 - x1);
@@ -223,6 +226,109 @@ std::pair<int, int> randMove(int x, int y) // note: x is positive towards right,
 	else
 		return { x,y };
 }
+////
+
+
+pair<int, int> victimMover(int goalX, int goalY)
+{
+	return make_pair(goalX + 1, goalY); // or something else
+}
+
+bool behind(int curX, int curY, int curVictimX, int curVictimY)
+{
+	int lastVictimX = curVictimX-1, lastVictimY = curVictimY; // because only going to the right
+
+
+	// line demarcating what is behind is the line perpendicular
+	// to the last move of the victim boat
+
+	// line of last move is y = ax+b
+	// line of perpendicular is y = cx+d
+
+	double a = (curVictimY - lastVictimY) / (curVictimX - lastVictimX);
+	if (a == 0.0)
+	{
+		pair<double, double> uPrime;
+		uPrime.first = 2*curVictimX - curX;
+		uPrime.second = curY;
+
+		double distUPrime = sqrt((uPrime.first - lastVictimX) * (uPrime.first - lastVictimX)
+			+ (uPrime.second - lastVictimY) * (uPrime.second - lastVictimY));
+		double distU = sqrt((curX - lastVictimX) * (curX - lastVictimX)
+			+ (curY - lastVictimY) * (curY - lastVictimY));
+
+		if (distUPrime > distU)
+			return true; // currently behind
+		else
+			return false;
+	}
+	else
+	{
+		double c = (-1) / a;
+		double b = curVictimY - a * curVictimX;
+		double d = curVictimY - c * curVictimX;
+
+		//reflect boat U over line y=cx+d
+		pair<double, double> uPrime;
+
+		// perp line from U to perp line of curV will be y = ax+e
+		double e = curY - a * curX;
+
+		//find intersection of y = ax+e and y = cx+d
+		uPrime.first = (d - e) / (a - c);
+		uPrime.second = a * uPrime.first + e;
+
+		// determine distance from U points to lastVictimX,Y
+		double distUPrime = sqrt((uPrime.first - lastVictimX) * (uPrime.first - lastVictimX)
+			+ (uPrime.second - lastVictimY) * (uPrime.second - lastVictimY));
+		double distU = sqrt((curX - lastVictimX) * (curX - lastVictimX)
+			+ (curY - lastVictimY) * (curY - lastVictimY));
+
+		if (distUPrime > distU)
+			return true; // currently behind
+		else
+			return false;
+	}
+}
+
+
+/*
+pair<int, int> moveBehind(int curX, int curY)
+{
+	// trying to loop around the victim, so chooses move that stays equidistant from victim
+	vector<pair<int, int>> moveList;
+	for (int i = -1; i < 1; i++) // NOTE: SINCE THIS SIM ONLY HAS RIGHT TRAVELLING BOAT V, LIMITED THE ROUNDABOUT
+									// SO I DONT HAVE TO HAVE A GIANT IF STATEMENT, BUT IF BOAT V MOVEMENT CHANGES THEN IT IS NEEDED
+	{
+		for (int j = -1; j <= 1; j++)
+		{
+			if (!(i == 0 && j == 0))
+			{
+				moveList.push_back(make_pair(i, j));
+				moveList.push_back(make_pair(i, j));
+			}
+		}
+	}
+
+	
+
+	double curDist = sqrt((curVictimY - curY)*(curVictimY - curY) + (curVictimX - curX)*(curVictimX - curX));
+	double minDistAway = 1000000; // away from the curDist
+	pair<int, int> returnMove;
+	for (auto i : moveList)
+	{
+		// calc distance after move
+		// find one closest to cur distance
+		double temp = sqrt((curVictimY - (curY + i.second))*(curVictimY - (curY + i.second))
+			+ (curVictimX - (curX + i.first))*(curVictimX - (curX + i.first)));
+		if (abs(curDist-temp) < minDistAway)
+		{
+			minDistAway = abs(curDist - temp);
+			returnMove = i;
+		}
+	}
+	return returnMove;
+}
 
 pair<int, int> zigzag(int curX, int curY)
 {
@@ -313,98 +419,6 @@ pair<int, int> zigzag(int curX, int curY)
 }
 
 
-
-bool behind(int curX, int curY)
-{
-	// line demarcating what is behind is the line perpendicular
-	// to the last move of the victim boat
-
-	// line of last move is y = ax+b
-	// line of perpendicular is y = cx+d
-
-	double a = (curVictimY - lastVictimY) / (curVictimX - lastVictimX);
-	if (a == 0.0)
-	{
-		pair<double, double> uPrime;
-		uPrime.first = 2*curVictimX - curX;
-		uPrime.second = curY;
-
-		double distUPrime = sqrt((uPrime.first - lastVictimX) * (uPrime.first - lastVictimX)
-			+ (uPrime.second - lastVictimY) * (uPrime.second - lastVictimY));
-		double distU = sqrt((curX - lastVictimX) * (curX - lastVictimX)
-			+ (curY - lastVictimY) * (curY - lastVictimY));
-
-		if (distUPrime > distU)
-			return true; // currently behind
-		else
-			return false;
-	}
-	else
-	{
-		double c = (-1) / a;
-		double b = curVictimY - a * curVictimX;
-		double d = curVictimY - c * curVictimX;
-
-		//reflect boat U over line y=cx+d
-		pair<double, double> uPrime;
-
-		// perp line from U to perp line of curV will be y = ax+e
-		double e = curY - a * curX;
-
-		//find intersection of y = ax+e and y = cx+d
-		uPrime.first = (d - e) / (a - c);
-		uPrime.second = a * uPrime.first + e;
-
-		// determine distance from U points to lastVictimX,Y
-		double distUPrime = sqrt((uPrime.first - lastVictimX) * (uPrime.first - lastVictimX)
-			+ (uPrime.second - lastVictimY) * (uPrime.second - lastVictimY));
-		double distU = sqrt((curX - lastVictimX) * (curX - lastVictimX)
-			+ (curY - lastVictimY) * (curY - lastVictimY));
-
-		if (distUPrime > distU)
-			return true; // currently behind
-		else
-			return false;
-	}
-}
-
-pair<int, int> moveBehind(int curX, int curY)
-{
-	// trying to loop around the victim, so chooses move that stays equidistant from victim
-	vector<pair<int, int>> moveList;
-	for (int i = -1; i < 1; i++) // NOTE: SINCE THIS SIM ONLY HAS RIGHT TRAVELLING BOAT V, LIMITED THE ROUNDABOUT
-									// SO I DONT HAVE TO HAVE A GIANT IF STATEMENT, BUT IF BOAT V MOVEMENT CHANGES THEN IT IS NEEDED
-	{
-		for (int j = -1; j <= 1; j++)
-		{
-			if (!(i == 0 && j == 0))
-			{
-				moveList.push_back(make_pair(i, j));
-				moveList.push_back(make_pair(i, j));
-			}
-		}
-	}
-
-	
-
-	double curDist = sqrt((curVictimY - curY)*(curVictimY - curY) + (curVictimX - curX)*(curVictimX - curX));
-	double minDistAway = 1000000; // away from the curDist
-	pair<int, int> returnMove;
-	for (auto i : moveList)
-	{
-		// calc distance after move
-		// find one closest to cur distance
-		double temp = sqrt((curVictimY - (curY + i.second))*(curVictimY - (curY + i.second))
-			+ (curVictimX - (curX + i.first))*(curVictimX - (curX + i.first)));
-		if (abs(curDist-temp) < minDistAway)
-		{
-			minDistAway = abs(curDist - temp);
-			returnMove = i;
-		}
-	}
-	return returnMove;
-}
-
 bool inZone(char zone, int curX, int curY)
 {
 	double distance = sqrt((curVictimY - curY) * (curVictimY - curY) + (curVictimX - curX) * (curVictimX - curX));
@@ -430,15 +444,22 @@ bool inZone(char zone, int curX, int curY)
 	}
 	return false;
 }
+*/
 
-int main(void)
+void getFollowing(int curX, int curY, int curVictimX, int curVictimY, int timesteps)
 {
-	auto a = freopen("out.csv", "w", stdout); // opens file to write to
+	int victimMoving = 0;
+	int lastVictimX = curVictimX-1, lastVictimY = curVictimY; // because only going to the right
+
+
+	//freopen("following_trajectories.csv", "w", stdout); // opens file to write to
 	// allows use std output to write to the file
-	int curX = 4000, curY = 1000;
+
 	
-	cout << "ux" << ", " << "uy" << ", ," <<"vx" << "," << "vy" << "\n";
-	while (make_pair(curX, curY) != make_pair(curVictimX, curVictimY))
+	//label dataset
+	
+	int t = 1;
+	while (t<=timesteps)  //(make_pair(curX, curY) != make_pair(curVictimX, curVictimY))
 	{
 		// dynamic chasing
 		
@@ -450,15 +471,51 @@ int main(void)
 			victimMoving++;
 		}
 		else
-			victimMoving++; victimMoving %= 10;
+			victimMoving++; victimMoving %= victim_speed;
 
-		if (!behind(curX, curY))
+		if (!behind(curX, curY, curVictimX, curVictimY))
 		{
 			// get to behind
-			pair<int,int> p = moveBehind(curX, curY);
+
+			// trying to loop around the victim, so chooses move that stays equidistant from victim
+			vector<pair<int, int>> moveList;
+			for (int i = -1; i < 1; i++) // NOTE: SINCE THIS SIM ONLY HAS RIGHT TRAVELLING BOAT V, LIMITED THE ROUNDABOUT
+											// SO I DONT HAVE TO HAVE A GIANT IF STATEMENT, BUT IF BOAT V MOVEMENT CHANGES THEN IT IS NEEDED
+			{
+				for (int j = -1; j <= 1; j++)
+				{
+					if (!(i == 0 && j == 0))
+					{
+						moveList.push_back(make_pair(i, j));
+						moveList.push_back(make_pair(i, j));
+					}
+				}
+			}
+
+			
+
+			double curDist = sqrt((curVictimY - curY)*(curVictimY - curY) + (curVictimX - curX)*(curVictimX - curX));
+			double minDistAway = 1000000; // away from the curDist
+			pair<int, int> returnMove;
+			for (auto i : moveList)
+			{
+				// calc distance after move
+				// find one closest to cur distance
+				double temp = sqrt((curVictimY - (curY + i.second))*(curVictimY - (curY + i.second))
+					+ (curVictimX - (curX + i.first))*(curVictimX - (curX + i.first)));
+				if (abs(curDist-temp) < minDistAway)
+				{
+					minDistAway = abs(curDist - temp);
+					returnMove = i;
+				}
+			}
+
+			//
+			pair<int,int> p = returnMove;
 			curX += p.first;
 			curY += p.second;
-			cout << curX << ", " << curY << ", ," << curVictimX  << "," << curVictimY << "\n";
+			t++;
+			cout << curX << ", " << curY << "," << curVictimX  << "," << curVictimY << "\n";
 		}
 		// move with three states
 		else
@@ -471,10 +528,11 @@ int main(void)
 			{
 				for (int i = 0; i < 15 + rand() % 10; i++)
 				{
+					
 					if (choice == 1)
 					{
 						//chase/correction
-						int r = rand() % 10;
+						int r = rand() % 5;
 						if (r == 0)
 						{
 							// random walk
@@ -497,25 +555,149 @@ int main(void)
 						victimMoving++;
 					}
 					else
-						victimMoving++; victimMoving %= 5;
+						victimMoving++; victimMoving %= victim_speed;
 
 					curX = temp.first; curY = temp.second;
 					//write time and coords to a file
-					cout << curX << ", " << curY << ", ," << curVictimX  << "," << curVictimY << "\n";
+					cout << curX << ", " << curY << "," << curVictimX  << "," << curVictimY << "\n";
+					t++;
 
-					if (curX == 2047 && curY == 2047)
+					if (curX == 2047 && curY == 2047 || t >= timesteps)
 						break;
 				}
 			}
 			else if (choice == 3)
 			{
-				auto temp = zigzag(curX, curY);
+				/////
+				pair<int,int> temp;
+
+				// zigzag
+				int i = 15 + rand() % 10;
+
+				// randomly choose a cardinal direction to zig zag in
+				int direction = rand() % 4 + 1;
+				pair<int, int> move1, move2, move3 = { 0,0 };
+				if (direction == 1)
+				{
+					// north
+					move1 = { -1,1 };
+					move2 = { 1,1 };
+				}
+				if (direction == 2)
+				{
+					// south
+					move1 = { -1,-1 };
+					move2 = { 1,-1 };
+				}
+				if (direction == 3)
+				{
+					// east
+					move1 = { 1,-1 };
+					move2 = { 1,1 };
+				}
+				if (direction == 4)
+				{
+					// west
+					move1 = { -1,-1 };
+					move2 = { -1,1 };
+				}
+
+				int j = 0;
+				bool failure = false;
+				while (j < i && t<= timesteps)
+				{
+					
+					int segmentLength = i / 5 + rand() % 3 - 1;
+					j += segmentLength;
+					if (j > i)
+						segmentLength -= j - i;
+
+					int randMoveType = rand() % 3 + 1;
+					pair<int, int> curMove;
+					if (randMoveType == 1)
+						curMove = move1;
+					else if (randMoveType == 2)
+						curMove = move2;
+					else if (randMoveType == 3)
+						curMove = move3;
+
+					for (int k = 0; k < segmentLength; k++)
+					{
+						int x = curX; int y = curY;
+
+						x += curMove.first; y += curMove.second;
+
+						if (x < 0 || x > 4096 || y < 0 || y > 4096)
+						{
+							failure = true;
+							break;
+						}
+						else
+						{
+							curX = x; curY = y;
+							cout << curX << ", " << curY << ',' << curVictimX << ',' << curVictimY << "\n";
+							t++;
+							if (victimMoving == 0)
+							{
+								lastVictimX = curVictimX; lastVictimY = curVictimY;
+								auto vMove = victimMover(curVictimX, curVictimY);
+								curVictimX = vMove.first, curVictimY = vMove.second;
+								victimMoving++;
+							}
+							else
+								victimMoving++; victimMoving %= victim_speed;
+
+							if (curX == 2047 && curY == 2047 || t >= timesteps)
+								temp = { curX,curY };
+								break;
+						}
+					}
+
+
+					if (failure)
+						break;
+				}
+				temp = { curX,curY };
+
+
+
+
+
+
+
+				/////
 				curX = temp.first; curY = temp.second;
 			}
 		}
 
-		if (inZone('A', curX, curY))
-			break;
+		//if (inZone('A', curX, curY))
+		//	break;
+		
 	}
+}
+
+
+int main(void){
+
+	int n = 20; //number of trajectories
+    
+    int timesteps = 1000;
+    int buffersize = 128; // used in entropybuffer calcs
+	freopen("following_trajectories.csv", "w", stdout); // opens file to write to std
+	cout << "ux" << ", " << "uy" << "," <<"vx" << "," << "vy" << "\n";
+    for (int k = 1; k<= n; k++){ //looping through each trajectory
+        pair<int,int> chaser = {2048,2048}; //chaser starts in the middle
+        std::pair<int,int> boatPositions[timesteps] = {};
+        std::pair<int,int> followingBoatPositions[timesteps] = {};
+		pair<int,int> runner = {2050+pow((-1),rand()%2)*(rand()%2000),2050+pow((-1),rand()%2)*(rand()%2000)};
+		cout << k << "\n";
+		getFollowing(chaser.first,chaser.second,runner.first,runner.second,timesteps);
+	}
+	
+	
+	
+	
 	return 0;
 }
+
+

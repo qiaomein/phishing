@@ -30,4 +30,7 @@ float findEntropyBuffer(int buffersize, int timesteps, std::pair<int,int> boatpo
 std::pair<int, int> randFollowMove(int curX, int curY, int goalX, int goalY);
 // return next randfollowmove given two points
 
+void getFollowing(int curX, int curY, int curVictimX, int curVictimY, int timesteps);
+//creates csv file of following from curX,curY to victim coords as victim moves starting from 2047 2047
+
 #endif
