@@ -16,6 +16,7 @@ print('python script ran')
 
 filename = "entropies.csv"
 
+
 randomwalk = []
 chasingwalk = []
 followingwalk = []
@@ -27,8 +28,12 @@ with open(filename, newline ='') as csvfile:
         #print(positions)
         randomwalk.append(float(traj[0].strip()))
         chasingwalk.append(float(traj[1].strip()))
-        followingwalk.append(float(traj[2].strip()))
-                
+        #followingwalk.append(float(traj[2].strip()))
+
+with open('entropies_fol.csv',newline = '') as csvfile:
+    csvread = csv.reader(csvfile)
+    for traj in csvread:
+        followingwalk.append(float(traj[0].strip()))   
 
 #plt.scatter(randomwalk[::2],randomwalk[1::2])
 #print(followingwalk)

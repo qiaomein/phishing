@@ -22,9 +22,13 @@ ${PROG} :
 #compiles cpp code 
 	-g++ ${CFLAGS} -o ${PROG} ${CPP_FILES} 
 #runs the exe file
-	-./output
+	-./${PROG}
 #runs python files in PY_FILES
 	-python ${PY_FILES}
 #	-"H:\Program Files\MATLAB\R2020b\bin\matlab.exe" -nosplash -nodesktop -r "run('C:\Users\Jack Qiao\OneDrive\Desktop\Research\HSMC 21\phishing\clustering.m');"
+train : 
+	-g++ ${CFLAGS} -o ${PROG} training.cpp randomwalk.cpp bresenham.cpp following.cpp
+	-./${PROG}
+
 clean:
 	-del ${PROG} *.o *.exe *.csv

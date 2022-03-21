@@ -3,112 +3,15 @@
 
 using namespace std;
 
-
-
-pair<int, int> randFollowMove(int curX, int curY, int goalX, int goalY) //based on probability matrix
-{
-    bool invis = false;
-	// 30% chance do bresenham
-	// 5% for each of invis or 3 directions away
-	// everything else 10%
-	pair<int, int> t = bresenhamstep(curX, curY, goalX, goalY);
-	pair<int, int> chaseMove = { t.first - curX, t.second - curY };
-	//chaseMove = fixBresenham(chaseMove);
-	
-	// set up randomizer list
-	map<pair<int, int>,bool> found;
-	vector<pair<int, int>> randomizedList;
-	randomizedList.push_back(chaseMove);
-	randomizedList.push_back({ -1 * chaseMove.first, -1 * chaseMove.second }); // 5%
-	found[chaseMove] = true; found[{ -1 * chaseMove.first, -1 * chaseMove.second }] = true;
-
-	for (int i = -1; i <= 1; i++)
-		for (int j = -1; j <= 1; j++)
-		{
-			int totalDiff = std::abs(chaseMove.first - i) + std::abs(chaseMove.second - j);
-			if (totalDiff == 3) // if chase was north, this would be SW/SE
-			{
-				randomizedList.push_back({ i,j });
-				found[{i, j}] = true;
-			}
-		}
-	
-	for (int i = -1; i <= 1; i++)
-		for (int j = -1; j <= 1; j++)
-		{
-			if (!found[{i, j}])
-			{
-				randomizedList.push_back({ i,j });
-			}
-		}
-	
-
-	pair<int, int> randMove = { curX, curY };
-
-
-	// note: commented directions are assuming bresenham outputs (0,1) as move
-	// randomizing
-	int moveNum = rand() % 20 + 1;
-	if (moveNum > 0 && moveNum <= 6)
-	{
-		// go with chase
-		randMove = { curX + chaseMove.first, curY + chaseMove.second };
-	}
-	else if (moveNum == 7)
-	{
-		// invis
-		invis = true;
-	}
-	else if (moveNum == 8)
-	{
-		// south
-		randMove = { curX + randomizedList[1].first, curY + randomizedList[1].second };
-	}
-	else if (moveNum == 9)
-	{
-		// south west
-		randMove = { curX + randomizedList[2].first, curY + randomizedList[2].second };
-	}
-	else if (moveNum == 10)
-	{
-		// south east * 9 and 10 may be swapped
-		randMove = { curX + randomizedList[3].first, curY + randomizedList[3].second };
-	}
-
-	else if (moveNum > 10 && moveNum <= 12) // from here on out is all 10%
-		randMove = { curX + randomizedList[4].first, curY + randomizedList[4].second };
-	else if (moveNum > 12 && moveNum <= 14)
-		randMove = { curX + randomizedList[5].first, curY + randomizedList[5].second };
-	else if (moveNum > 14 && moveNum <= 16)
-		randMove = { curX + randomizedList[6].first, curY + randomizedList[6].second };
-	else if (moveNum > 16 && moveNum <= 18)
-		randMove = { curX + randomizedList[7].first, curY + randomizedList[7].second };
-	else if (moveNum > 18 && moveNum <= 20)
-		randMove = { curX + randomizedList[8].first, curY + randomizedList[8].second };
-	
-
-	return randMove;
-}
-
-
 int main () {
 
-    ofstream myfile; ofstream entropyfile;
-
-
-    myfile.open("positions.csv");
-    entropyfile.open("entropies.csv");
-
-    int n = 50; //number of trajectories
+    ofstream myfile;
+    myfile.open("animation.csv");
     
     
 
-    int timesteps = 6000;
-    int buffersize = 128; // used in entropybuffer calcs
+    int timesteps = 5000;
 
-    doFollowing(n,timesteps,buffersize);
-
-    for (int k = 1; k<= n; k++){ //looping through each trajectory
         pair<int,int> chaser = {2048,2048}; //chaser starts in the middle
         std::pair<int,int> boatPositions[timesteps] = {};
         std::pair<int,int> followingBoatPositions[timesteps] = {};
@@ -119,9 +22,9 @@ int main () {
         chasingBoatPositions[0] = chaser;
         followingBoatPositions[0] = chaser;
         threeFollowBoatPositions[0] = chaser;
-        int dir = 1; //rand() % 4 + 1; 
-        pair<int,int> runner = {(rand() % 2)*(chaser.first+512) + rand() % (chaser.first-512) + 1,(rand() % 2)*(chaser.second+512) +rand() % (chaser.second-512) + 1}; //randomize runner pos
-        myfile << k << "\n";
+        int dir = rand() % 4 + 1; 
+        dir = 1;
+        pair<int,int> runner = {1900,1950};
 
         //declaring all vars for zigzag
         int choice, direction, segmentLength;
@@ -129,10 +32,6 @@ int main () {
         int randMoveType = rand() % 3 + 1;
         int m = 0;
         int zzl = 15 + rand() % 10;
-        
-        //getFollowing(chaser.first,chaser.second,timesteps);
-
-
 
         for (int i = 1; i<= timesteps; i++){ //looping through each time step
 
@@ -193,7 +92,7 @@ int main () {
             else{
                 chasingBoatPositions[i] = {-1,-1};
             }
-//follow move
+
             if ((currXf != runner.first || currYf != runner.second) && currXf != -1){
                 followingBoatPositions[i] = randFollowMove(currXf,currYf,runner.first,runner.second);
             }
@@ -246,8 +145,8 @@ int main () {
             }
 
             myfile << currX << "," << currY << "," << currXc << "," << currYc 
-            << "," << currXf << "," << currYf << "," << runner.first << "," << runner.second << "\n"; //<< "," << currX3f << "," << currY3f <<  "\n";
-            if (i % 2 == 1){
+            << "," << currXf << "," << currYf << "," <<runner.first << "," << runner.second << "," << currX3f << "," << currY3f <<  "\n";
+            if (i % 4 == 1){
                 if (dir == 1){
                     runner.first++;
                 }
@@ -264,25 +163,7 @@ int main () {
 
         }
 
-        // add following to positions
-        string line;
-        ifstream followingfile ("following_trajectories.csv");
-        if (followingfile.is_open()){
-            while (followingfile.good()){
-                getline(followingfile,line);
-                //cout << line << endl;
-            }
-            followingfile.close();
-        }
-
-
-    entropyfile << findEntropyBuffer(buffersize,timesteps,boatPositions) << ", "
-    << findEntropyBuffer(buffersize,timesteps,chasingBoatPositions) << ", "
-    << findEntropyBuffer(buffersize,timesteps,threeFollowBoatPositions) << "\n";
-
-    }
-
-    myfile.close(); entropyfile.close();
+    myfile.close(); 
 
     return 0;
 }
