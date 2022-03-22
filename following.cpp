@@ -31,7 +31,7 @@ using namespace std;
 #define LL long long
 
 
-int victim_speed = 10; // the higher the slower
+int victim_speed = 10; 
 
 
 /*
@@ -762,7 +762,7 @@ void getFollowing(int curX, int curY, int curVictimX, int curVictimY, int timest
 }
 
 
-void doFollowing(int n, int timesteps, int buffersize)
+void doFollowing(int n, int timesteps, int buffersize, string filename)
 {
 
 	/*
@@ -773,9 +773,15 @@ void doFollowing(int n, int timesteps, int buffersize)
 	*/
 
 	ofstream foltraj, entropyfile;
-	
-	foltraj.open("following_trajectories.csv");
-	entropyfile.open("entropies_fol.csv");
+	bool isTraining = true;
+
+	if (filename != "following_trajectories.csv"){
+		isTraining = false;
+	}
+	foltraj.open(filename);
+	if (isTraining) {
+		entropyfile.open("entropies_fol.csv");
+	}
 	
 
 	//freopen("following_trajectories.csv", "w", stdout); // opens file to write to std
@@ -1013,12 +1019,18 @@ void doFollowing(int n, int timesteps, int buffersize)
 		}
 
 		for (int z = 0; z <= timesteps; z++){
-			foltraj << followingBoatPositions[z].first << ',' << followingBoatPositions[z].second << ',' << runner.first+z << ',' << runner.second<< '\n';
+			foltraj << followingBoatPositions[z].first << ',' << followingBoatPositions[z].second << ',' << runner.first+int(z/victim_speed) << ',' << runner.second<< '\n';
 		}
-		entropyfile << findEntropyBuffer(buffersize,timesteps,followingBoatPositions)<< '\n';
+
+
+		if (isTraining){
+			entropyfile << findEntropyBuffer(buffersize,timesteps,followingBoatPositions)<< '\n';
+		}
 	}
 
-	entropyfile.close();
+	if (isTraining){
+		entropyfile.close();
+	}
 	foltraj.close();
 
 }
