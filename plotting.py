@@ -14,8 +14,16 @@ print('python script ran')
 #plt.plot(x,y)
 ###############
 
+def weighted_t(m1,s1,m2,s2):
+    return m1 + (s2*(m2-m1))/(s1+s2)
+
+
+histogram_resolution = 10
+
 filename = "entropies.csv"
 
+
+#### plotting entropy clusters #####
 
 randomwalk = []
 chasingwalk = []
@@ -45,15 +53,17 @@ plt.title('Entropy Clusters')
 
 
 
+
 plt.plot(randomwalk,[0]*len(followingwalk),'bo',markersize = 2)
 
 plt.plot(chasingwalk,[0]*len(followingwalk),'go',markersize = 2)
 plt.plot(followingwalk,[0]*len(followingwalk),'ro',markersize = 2)
 
 #plt.xlim(0,4)
-plt.legend(['random','chasing','following'])
-data = [randomwalk,chasingwalk,followingwalk]
 
+#########################
+
+data = [randomwalk,chasingwalk,followingwalk]
 DATA = np.array(randomwalk+chasingwalk+followingwalk)
 k_means = KMeans(n_clusters = 3).fit(DATA.reshape(-1,1))
 k_clusters = sorted([float(x) for x in k_means.cluster_centers_])
@@ -61,38 +71,51 @@ print(f"K-means cluster: {k_clusters}")
 
 means = [mean(l) for l in data]
 stdevs = [stdev(l) for l in data]
-print("Supervised means, stdevs: ",means,"|||",stdevs)
+d = {means[i]:stdevs[i] for i in range(len(data))}
+d = sorted(d.items())# d is sorted by key list of tuples
 
-plt.plot(means,[0]*3,'yo',markersize=5)
+print("Supervised means: stdevs: ", d)
+
+plt.plot(means,[0]*3,'yo',markersize=10)
+plt.plot(k_clusters,[0]*3,'mo',markersize = 10)
+
 
 
 ## writing to csv file
-thresholds = [0,means[1]+stdevs[1]*(means[2]-means[1])/(stdevs[2]+stdevs[1]),means[2]+stdevs[2]*(means[0]-means[2])/(stdevs[0]+stdevs[2])]
-voronoi_thresholds = [0,(k_clusters[0]+k_clusters[1])/2,(k_clusters[2]+k_clusters[1])/2]
+supervised_weighted_thresholds = [0] + [weighted_t(d[i][0],d[i][1],d[i+1][0],d[i+1][1]) for i in range(len(d)-1)]
+#k_weighted_thresholds = [0] + []
 
-print("THRESHOLDS:", thresholds); print(voronoi_thresholds)
+k_voronoi_thresholds = [0,(k_clusters[0]+k_clusters[1])/2,(k_clusters[2]+k_clusters[1])/2]
+supervised_voronoi_thresholds = [0] + [(d[i][0]+d[i+1][0])/2 for i in range(len(d)-1)]
 
-with open('thresholds.csv','w') as csvfile:
+#print("")
+
+with open('weighted_thresholds.csv','w') as csvfile:
     csvwriter = csv.writer(csvfile)
 
-    csvwriter.writerow(thresholds)
+    csvwriter.writerow(supervised_weighted_thresholds)
 
-with open('thresholds_voronoi.csv','w') as csvfile:
+with open('voronoi_thresholds.csv','w') as csvfile:
     csvwriter = csv.writer(csvfile)
 
-    csvwriter.writerow(voronoi_thresholds)
+    csvwriter.writerow(supervised_voronoi_thresholds)
+    csvwriter.writerow(k_voronoi_thresholds)
 
-for i in range(len(thresholds)):
-    plt.axvline(thresholds[i])
-    plt.axvline(voronoi_thresholds[i],color = 'red')
+for i in range(len(d)):
+    plt.axvline(supervised_weighted_thresholds[i], color = 'purple')
+    plt.axvline(supervised_voronoi_thresholds[i],color = 'red')
+    plt.axvline(k_voronoi_thresholds[i],color = 'blue')
+plt.legend(['random','chasing','following','supervised means','k-means','supervised weighted t','supervised voronoi t','k voronoi t'],loc='best',framealpha = 1)
+
+
 
 plt.subplot(122)
 plt.title('Distributions')
 
 
-plt.hist(randomwalk,bins = 50)
-plt.hist(chasingwalk,bins = 50)
-plt.hist(followingwalk,bins = 50)
+plt.hist(randomwalk,bins = histogram_resolution)
+plt.hist(chasingwalk,bins = histogram_resolution)
+plt.hist(followingwalk,bins = histogram_resolution)
 
 plt.legend(['random','chasing','following'])
 

@@ -99,14 +99,14 @@ int main () {
     myfile.open("positions.csv");
     entropyfile.open("entropies.csv");
 
-    int n = 50; //number of trajectories
-    
+    int n = 200; //number of trajectories
+    int victim_speed = 10; // the higher the slower
     
 
-    int timesteps = 6000;
-    int buffersize = 128; // used in entropybuffer calcs
+    int timesteps = 3000;
+    int buffersize = pow(2,7); // used in entropybuffer calcs
 
-    doFollowing(n,timesteps,buffersize);
+    doFollowing(n,timesteps,buffersize,"following_trajectories.csv");
 
     for (int k = 1; k<= n; k++){ //looping through each trajectory
         pair<int,int> chaser = {2048,2048}; //chaser starts in the middle
@@ -247,7 +247,7 @@ int main () {
 
             myfile << currX << "," << currY << "," << currXc << "," << currYc 
             << "," << currXf << "," << currYf << "," << runner.first << "," << runner.second << "\n"; //<< "," << currX3f << "," << currY3f <<  "\n";
-            if (i % 2 == 1){
+            if (i % victim_speed == 1){
                 if (dir == 1){
                     runner.first++;
                 }
@@ -265,6 +265,7 @@ int main () {
         }
 
         // add following to positions
+        /*
         string line;
         ifstream followingfile ("following_trajectories.csv");
         if (followingfile.is_open()){
@@ -274,6 +275,7 @@ int main () {
             }
             followingfile.close();
         }
+        */
 
 
     entropyfile << findEntropyBuffer(buffersize,timesteps,boatPositions) << ", "

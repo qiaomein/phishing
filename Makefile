@@ -29,6 +29,11 @@ ${PROG} :
 train : 
 	-g++ ${CFLAGS} -o ${PROG} training.cpp randomwalk.cpp bresenham.cpp following.cpp
 	-./${PROG}
+	-python plotting.py
+
+generate_set :
+	-g++ ${CFLAGS} -o ${PROG} classification_set.cpp randomwalk.cpp bresenham.cpp following.cpp
+	-./${PROG}
 
 clean:
 	-del ${PROG} *.o *.exe *.csv
