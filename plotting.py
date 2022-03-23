@@ -15,7 +15,7 @@ print('python script ran')
 ###############
 
 def weighted_t(m1,s1,m2,s2):
-    return m1 + (s2*(m2-m1))/(s1+s2)
+    return m1 + (s1*(m2-m1))/(s1+s2)
 
 
 histogram_resolution = 10
@@ -72,7 +72,9 @@ print(f"K-means cluster: {k_clusters}")
 means = [mean(l) for l in data]
 stdevs = [stdev(l) for l in data]
 d = {means[i]:stdevs[i] for i in range(len(data))}
+#print(d)
 d = sorted(d.items())# d is sorted by key list of tuples
+#print(d)
 
 print("Supervised means: stdevs: ", d)
 
@@ -82,8 +84,12 @@ plt.plot(k_clusters,[0]*3,'mo',markersize = 10)
 
 
 ## writing to csv file
+
 supervised_weighted_thresholds = [0] + [weighted_t(d[i][0],d[i][1],d[i+1][0],d[i+1][1]) for i in range(len(d)-1)]
-#k_weighted_thresholds = [0] + []
+
+k_weighted_thresholds = [0] + [weighted_t(k_clusters[i],d[i][1],k_clusters[i+1],d[i+1][1]) for i in range(len(d)-1)]
+# same stdev?
+
 
 k_voronoi_thresholds = [0,(k_clusters[0]+k_clusters[1])/2,(k_clusters[2]+k_clusters[1])/2]
 supervised_voronoi_thresholds = [0] + [(d[i][0]+d[i+1][0])/2 for i in range(len(d)-1)]
@@ -94,6 +100,7 @@ with open('weighted_thresholds.csv','w') as csvfile:
     csvwriter = csv.writer(csvfile)
 
     csvwriter.writerow(supervised_weighted_thresholds)
+    csvwriter.writerow(k_weighted_thresholds)
 
 with open('voronoi_thresholds.csv','w') as csvfile:
     csvwriter = csv.writer(csvfile)
@@ -105,6 +112,9 @@ for i in range(len(d)):
     plt.axvline(supervised_weighted_thresholds[i], color = 'purple')
     plt.axvline(supervised_voronoi_thresholds[i],color = 'red')
     plt.axvline(k_voronoi_thresholds[i],color = 'blue')
+    plt.axvline(k_weighted_thresholds[i],color = 'green')
+
+
 plt.legend(['random','chasing','following','supervised means','k-means','supervised weighted t','supervised voronoi t','k voronoi t'],loc='best',framealpha = 1)
 
 
