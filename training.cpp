@@ -97,12 +97,13 @@ int main () {
 
     ofstream myfile; ofstream entropyfile;
 
-
+    srand(time(0));
+    
     myfile.open("positions.csv");
     entropyfile.open("entropies.csv");
 
-    int n = 10; //number of trajectories
-    int victim_speed = 2; // the higher the slower
+    int n = 100; //number of trajectories
+    int victim_speed = 5; // the higher the slower
     
 
     int timesteps = 3000;
