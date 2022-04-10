@@ -135,7 +135,8 @@ int main () {
 
         
         int chase_length = 20;
-        vector<pair<int,int>> curchase(10);
+
+        vector<pair<int,int>> curchase(10), cur3chase(10);
         
         //getFollowing(chaser.first,chaser.second,timesteps);
 
@@ -178,8 +179,7 @@ int main () {
                 segmentLength = zzl/5 + rand() % 3;
                 
             }
-
-
+            
             int currX3f = threeFollowBoatPositions[i-1].first;
             int currY3f = threeFollowBoatPositions[i-1].second;
             int currXc = chasingBoatPositions[i-1].first;
@@ -215,14 +215,20 @@ int main () {
             }
 
 
-            if (make_pair(currX3f,currY3f) != runner && currX3f != -1 ) {
-                
-            
 // control flow for 3state following
+
+            if (make_pair(currX3f,currY3f) != runner && currX3f != -1 ) {
             
                 if (choice == 1) //chasing
                 {
-                    threeFollowBoatPositions[i] = bresenhamstep(make_pair(currX3f,currY3f),runner,1)[0];
+                    /*
+                    if (i % chase_length == 1){
+                        cur3chase = bresenhamstep({currX3f,currY3f},runner,chase_length);
+                    }
+                    */
+
+
+                    threeFollowBoatPositions[i] = bresenhamstep({currX3f,currY3f},runner,2)[1];
                 }
                 else if (choice == 2)
                 {
