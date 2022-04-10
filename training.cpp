@@ -115,13 +115,11 @@ int main () {
     for (int k = 1; k<= n; k++){ //looping through each trajectory
         pair<int,int> chaser = {2048,2048}; //chaser starts in the middle
         std::pair<int,int> boatPositions[timesteps] = {};
-        std::pair<int,int> followingBoatPositions[timesteps] = {};
         std::pair<int,int> chasingBoatPositions[timesteps] = {};
         std::pair<int,int> threeFollowBoatPositions[timesteps] = {};
 
         boatPositions[0] = chaser;
         chasingBoatPositions[0] = chaser;
-        followingBoatPositions[0] = chaser;
         threeFollowBoatPositions[0] = chaser;
         int dir = 1; //rand() % 4 + 1; 
         int runner_range = 1024;
@@ -184,9 +182,6 @@ int main () {
 
             int currX3f = threeFollowBoatPositions[i-1].first;
             int currY3f = threeFollowBoatPositions[i-1].second;
-
-            int currXf = followingBoatPositions[i-1].first;
-            int currYf = followingBoatPositions[i-1].second;
             int currXc = chasingBoatPositions[i-1].first;
             int currYc = chasingBoatPositions[i-1].second;
             int currX = boatPositions[i-1].first;
@@ -218,15 +213,9 @@ int main () {
             else{
                 chasingBoatPositions[i] = {-1,-1};
             }
-//follow move
-            if ((currXf != runner.first || currYf != runner.second) && currXf != -1){
-                followingBoatPositions[i] = randFollowMove(currXf,currYf,runner.first,runner.second);
-            }
-            else{
-                followingBoatPositions[i] = {-1,-1};
-            }
 
-            if (make_pair(currX3f,currY3f) != runner && currXf != -1 ) {
+
+            if (make_pair(currX3f,currY3f) != runner && currX3f != -1 ) {
                 
             
 // control flow for 3state following
@@ -270,7 +259,9 @@ int main () {
             }
 
             myfile << currX << "," << currY << "," << currXc << "," << currYc 
-            << "," << currXf << "," << currYf << "," << runner.first << "," << runner.second << "\n"; //<< "," << currX3f << "," << currY3f <<  "\n";
+            << "," << currX3f << "," << currY3f << "," << runner.first << "," << runner.second << "\n"; 
+            
+            
             if (i % victim_speed == 1){
                 if (dir == 1){
                     runner.first++;
