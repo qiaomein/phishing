@@ -48,7 +48,6 @@ with open('entropies_fol.csv',newline = '') as csvfile:
 
 plt.figure(figsize=(18,9))
 
-plt.subplot(121)
 plt.title('Entropy Clusters')
 
 
@@ -117,9 +116,10 @@ for i in range(len(d)):
 
 plt.legend(['random','chasing','following','supervised means','k-means','supervised weighted t','supervised voronoi t','k voronoi t'],loc='best',framealpha = 1)
 
+plt.show()
 
 
-plt.subplot(122)
+plt.figure()
 plt.title('Distributions')
 
 

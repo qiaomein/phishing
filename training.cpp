@@ -106,10 +106,10 @@ int main () {
     int victim_speed = 5; // the higher the slower
     
 
-    int timesteps = 3000;
+    int timesteps = 6000;
     int buffersize = pow(2,7); // used in entropybuffer calcs
 
-    //doFollowing(n,timesteps,buffersize,"following_trajectories.csv");
+    doFollowing(n,timesteps,buffersize,"following_trajectories.csv");
 
 
     for (int k = 1; k<= n; k++){ //looping through each trajectory

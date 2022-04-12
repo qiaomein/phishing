@@ -563,6 +563,7 @@ void getFollowing(int curX, int curY, int curVictimX, int curVictimY, int timest
 			// get to behind
 
 			// trying to loop around the victim, so chooses move that stays equidistant from victim
+			
 			vector<pair<int, int>> moveList;
 			for (int i = -1; i < 1; i++) // NOTE: SINCE THIS SIM ONLY HAS RIGHT TRAVELLING BOAT V, LIMITED THE ROUNDABOUT
 											// SO I DONT HAVE TO HAVE A GIANT IF STATEMENT, BUT IF BOAT V MOVEMENT CHANGES THEN IT IS NEEDED
@@ -588,9 +589,9 @@ void getFollowing(int curX, int curY, int curVictimX, int curVictimY, int timest
 				// find one closest to cur distance
 				double temp = sqrt((curVictimY - (curY + i.second))*(curVictimY - (curY + i.second))
 					+ (curVictimX - (curX + i.first))*(curVictimX - (curX + i.first)));
-				if (abs(curDist-temp) < minDistAway)
+				if (std::abs(curDist-temp) < minDistAway)
 				{
-					minDistAway = abs(curDist - temp);
+					minDistAway = std::abs(curDist - temp);
 					returnMove = i;
 				}
 			}
@@ -624,7 +625,7 @@ void getFollowing(int curX, int curY, int curVictimX, int curVictimY, int timest
 							temp = randMove(curX, curY);
 						}
 						else
-							temp = bresenhamstep(curX, curY, curVictimX, curVictimY);
+							temp = bresenhamstep({curX, curY}, {curVictimX, curVictimY}, 2)[1];
 					}
 					else if (choice == 2)
 					{
@@ -884,7 +885,7 @@ void doFollowing(int n, int timesteps, int buffersize, string filename)
 								temp = randMove(curX, curY);
 							}
 							else
-								temp = bresenhamstep(curX, curY, curVictimX, curVictimY);
+								temp = bresenhamstep({curX, curY}, {curVictimX, curVictimY}, 2)[1];
 						}
 						else if (choice == 2)
 						{
