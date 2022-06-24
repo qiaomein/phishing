@@ -1,4 +1,4 @@
-# The code for "Combining Perception Considerations with Artificial Intelligence in Maritime Threat Detection Systems" published in SoSE 2022 Conference in Rochester, NY
+# "Combining Perception Considerations with Artificial Intelligence in Maritime Threat Detection Systems" SoSE 2022 Conference in Rochester, NY
 
 phishing boat.
 
